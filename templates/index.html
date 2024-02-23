@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chatbot Widget</title>
+  <style>
+    /* Chatbot widget CSS styles */
+    .chatbot-icon {
+      /* Styling for the chatbot icon */
+      position: fixed; /* Position the icon fixed on the screen */
+      bottom: 20px; /* Distance from the bottom of the screen */
+      right: 20px; /* Distance from the right of the screen */
+      width: 50px; /* Width of the icon */
+      height: 50px; /* Height of the icon */
+      background-color: #4CAF50; /* Background color of the icon */
+      color: white; /* Text color of the icon */
+      border-radius: 50%; /* Border radius to make it circular */
+      border: none; /* No border */
+      cursor: pointer; /* Change cursor to pointer on hover */
+      outline: none; /* No outline */
+    }
+
+    .chatbot-icon:hover {
+      /* Styling when hovering over the chatbot icon */
+      background-color: #45a049; /* Change background color on hover */
+    }
+  </style>
+</head>
+<body>
+  <!-- Chatbot widget container -->
+  <div id="chatbot-widget">
+    <!-- Chat icon -->
+    <button class="chatbot-icon" onclick="openChatWindow()">Chat</button>
+  </div>
+
+  <!-- JavaScript to open chat window -->
+  <script>
+    function openChatWindow() {
+      // Function to open the chat window
+      // Calculate the position of the new window
+      var windowWidth = window.innerWidth; // Get the width of the current window
+      var chatWindowWidth = windowWidth / 2; // Set the width of the chat window to half of the window width
+      var chatWindowLeft = windowWidth - chatWindowWidth; // Calculate the left position of the chat window
+
+      // Open a new window
+      var chatWindow = window.open('/chat', 'chatWindow', `width=${chatWindowWidth},height=${window.innerHeight},left=${chatWindowLeft},top=0`); // Open a new window with specified properties
+    }
+  </script>
+</body>
+</html>

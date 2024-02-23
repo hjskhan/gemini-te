@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chatbot Window</title>
+  <style>
+    /* Chatbot interface CSS styles */
+    body, html {
+      /* Set height to 100% and remove margins and padding */
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+
+    .chat-container {
+      /* Container for chat interface */
+      position: fixed; /* Position fixed to cover the entire viewport */
+      width: 100%; /* Full width */
+      height: 100%; /* Full height */
+      top: 0;
+      left: 0;
+      margin: 0;
+      padding: 0;
+      display: flex; /* Use flexbox for layout */
+      flex-direction: column; /* Stack elements vertically */
+      align-items: stretch; /* Stretch items to fit container */
+    }
+
+    #chat-messages {
+      /* Container for chat messages */
+      flex: 1; /* Take remaining vertical space */
+      overflow-y: auto; /* Enable vertical scrolling */
+      padding: 10px; /* Add padding */
+    }
+
+    .input-container {
+      /* Container for message input */
+      position: relative; /* Relative positioning */
+      display: flex; /* Use flexbox */
+      justify-content: flex-end; /* Align input container to the right */
+    }
+
+    .message-input {
+      /* Input field for typing message */
+      flex: 1; /* Take remaining width */
+      width: 80%; /* Set width */
+      margin: 10px 0; /* Add margin */
+      padding: 5px; /* Add padding */
+      border: 1px solid #ccc; /* Add border */
+      border-radius: 5px; /* Add border radius */
+      background-color: #f0f8ff; /* Background color */
+      
+    }
+
+    .send-button {
+      /* Button to send message */
+      margin: 10px; /* Add margin */
+      padding: 5px; /* Add padding */
+      border: none; /* Remove border */
+      border-radius: 5px; /* Add border radius */
+      background-color: #4CAF50; /* Background color */
+      color: white; /* Text color */
+      cursor: pointer; /* Set cursor to pointer */
+    }
+
+    .user-container {
+      /* Container for user messages */
+      align-self: flex-end; /* Align user message to the right */
+      text-align: right; /* Align text to the right */
+    }
+
+    .bot-container {
+      /* Container for bot messages */
+      align-self: flex-start; /* Align bot message to the left */
+      text-align: left; /* Align text to the left */
+    }
+
+    .user-message, .bot-message {
+      /* Style for message bubbles */
+      padding: 10px; /* Add padding */
+      margin: 5px; /* Add margin */
+      border-radius: 5px; /* Add border radius */
+    }
+
+    .user-message {
+      /* Style for user messages */
+      background-color: #f0f0f0; /* Background color */
+    }
+
+    .bot-message {
+      /* Style for bot messages */
+      background-color: #4CAF50; /* Background color */
+      color: white; /* Text color */
+    }
+  </style>
+</head>
+<body>
+  <!-- Chatbot interface -->
+  <div class="chat-container" id="chat-container">
+    <!-- Container for displaying chat messages -->
+    <div id="chat-messages"></div>
+    <!-- Input field for typing messages and send button -->
+    <div class="input-container">
+      <input type="text" class="message-input" id="user-input" placeholder="Type your message...">
+      <button class="send-button" onclick="sendMessage()">Send</button>
+    </div>
+  </div>
+
+  <!-- JavaScript for chat functionality -->
+  <script>
+    function sendMessage() {
+      // Function to send user message to server
+      var userInput = document.getElementById("user-input").value; // Get user input
+      if (userInput.trim() !== "") { // Check if input is not empty
+        // Display user message
+        displayMessage('User: ' + userInput, true);
+        // Clear input field
+        document.getElementById("user-input").value = "";
+        // Send user message to server for processing
+        fetch('/chat', {
+          method: 'POST', // Use POST method
+          headers: {
+            'Content-Type': 'application/json' // Specify content type
+          },
+          body: JSON.stringify({ user_question: userInput }) // Send user input as JSON
+        })
+        .then(response => response.json()) // Parse response as JSON
+        .then(data => {
+          // Display bot response
+          displayMessage('Bot: ' + data.response, false);
+        })
+        .catch(error => {
+          console.error('Error:', error); // Log any errors
+        });
+      }
+    }
+
+    function displayMessage(message, isUser) {
+      // Function to display messages in chat interface
+      var chatMessages = document.getElementById("chat-messages"); // Get chat messages container
+      var messageDiv = document.createElement("div"); // Create a new div element
+      messageDiv.className = isUser ? "user-container" : "bot-container"; // Set class based on sender (user or bot)
+      var messageContent = document.createElement("div"); // Create a new div for message content
+      messageContent.className = isUser ? "user-message" : "bot-message"; // Set class based on sender
+      messageContent.innerHTML = message; // Set message content
+      messageDiv.appendChild(messageContent); // Append message content to message div
+      chatMessages.appendChild(messageDiv); // Append message div to chat messages container
+      // Scroll to bottom of chat container
+      chatMessages.scrollTop = chatMessages.scrollHeight; // Scroll to bottom
+    }
+  </script>
+</body>
+</html>
